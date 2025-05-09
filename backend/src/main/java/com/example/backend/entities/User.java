@@ -26,6 +26,7 @@ public class User implements UserDetails {
     private int id;
     private String firstName;
     private String lastName;
+    private String metierSugg;
     @Column(nullable = false,unique=true)
     private String email;
     @Column(nullable = false)
