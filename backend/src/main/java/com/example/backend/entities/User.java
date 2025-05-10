@@ -31,6 +31,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+    private String metierSugg;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
