@@ -23,14 +23,14 @@ public class AuthController {
     }
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Validated @RequestBody RegisterDTO request) {
+    public ResponseEntity<String> register(@Validated @RequestBody RegisterDTO request) {
         String message = userService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(message));
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
     @CrossOrigin(origins = "http://localhost:4200")
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Validated @RequestBody LoginDTO request) {
-        String token = userService.login(request);
-        return ResponseEntity.ok(new AuthResponse("Login successful", token));
-    }
+   @PostMapping("/login")
+  public ResponseEntity<AuthResponse> login(@Validated @RequestBody LoginDTO request) {
+    AuthResponse response = userService.login(request);
+    return ResponseEntity.ok(response);
+}
 }
