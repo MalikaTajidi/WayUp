@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,9 @@ public class CompanySuggestionController {
     private final CompanySuggestionService geminiService;
     private final ObjectMapper objectMapper;
     
+    @Autowired
+    private ApplicationContext context;
+    
     public CompanySuggestionController(UserRepository userRepository, 
                                       CompanySuggestionService geminiService, 
                                       ObjectMapper objectMapper) {
@@ -45,22 +50,26 @@ public class CompanySuggestionController {
         User user = optionalUser.get();
         String jobTitle = user.getMetierSugg(); // get job from DB
         
+        if (jobTitle == null || jobTitle.trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("User does not have a job title specified");
+        }
+        
         try {
             // Get raw JSON response from service
             String rawJson = geminiService.fetchCompanies(jobTitle);
             
-            // Check if response starts with "Error" or doesn't start with "[" (not a JSON array)
-            if (rawJson == null || rawJson.trim().startsWith("Error") || !rawJson.trim().startsWith("[")) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("API returned an error response: " + rawJson);
-            }
-            
-            // Direct parsing to list of DTOs without intermediate parsing steps
-            // The service already returns a properly formatted JSON array
+            // Parse the response as a list of CompanySuggestionDTO objects
             List<CompanySuggestionDTO> companies = objectMapper.readValue(
                 rawJson, 
                 new TypeReference<List<CompanySuggestionDTO>>() {}
             );
+            
+            // Check if the first company has an error
+            if (companies.size() > 0 && companies.get(0).getName().contains("Error")) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(companies.get(0));
+            }
             
             return ResponseEntity.ok(companies);
         } catch (IOException e) {
@@ -81,5 +90,11 @@ public class CompanySuggestionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("API test failed: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/debug/list-models")
+    public ResponseEntity<String> listModels() {
+        String result = geminiService.listAvailableModels();
+        return ResponseEntity.ok(result);
     }
 }

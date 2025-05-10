@@ -17,4 +17,17 @@ public class CompanySuggestionDTO {
     private String location;
     private String size;
     private int foundedYear;
+
+     @Override
+    public String toString() {
+        return "CompanySuggestionDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", industry='" + industry + '\'' +
+                ", location='" + location + '\'' +
+                ", size='" + size + '\'' +
+                ", foundedYear=" + foundedYear +
+                '}';
+    }
 }
