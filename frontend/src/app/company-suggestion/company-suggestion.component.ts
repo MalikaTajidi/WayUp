@@ -16,15 +16,23 @@ export class CompanySuggestionComponent implements OnInit
    private service = inject(CompanySuggestionService);
 
   companies: CompanySuggestion[] = [];
-  userId = 1; // Replace with actual logged-in user ID
+  userId!: number;
 
   ngOnInit() {
-    this.service.getSuggestions(this.userId).subscribe({
-      next: (data) => (this.companies = data),
-      error: (err) => console.error('Error fetching companies', err),
-    });
+    const userData = localStorage.getItem('authUser');
+   if (userData) {
+      const parsedUser = JSON.parse(userData);
+      this.userId = parsedUser.id;
+      this.service.getSuggestions(this.userId).subscribe({
+        next: (data) => (this.companies = data),
+        error: (err) => console.error('Error fetching companies', err),
+      });
+    } else {
+      console.error('No user data found in localStorage');
+    }
+    }
   }
 
- }
+ 
 
 
