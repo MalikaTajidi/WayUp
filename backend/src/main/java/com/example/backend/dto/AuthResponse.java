@@ -1,8 +1,11 @@
 package com.example.backend.dto;
 
+import com.example.backend.entities.User;
+
 public class AuthResponse {
     private String message;
     private String token;
+    private UserDTO user;
 
     public AuthResponse(String message) {
         this.message = message;
@@ -12,6 +15,12 @@ public class AuthResponse {
         this.message = message;
         this.token = token;
     }
+     public AuthResponse(String message, String token,UserDTO user) {
+        this.message = message;
+        this.token = token;
+        this.user = user;
+
+    }
 
     public String getMessage() {
         return message;
@@ -19,5 +28,8 @@ public class AuthResponse {
 
     public String getToken() {
         return token;
+    }
+    public UserDTO getUser() {
+        return user;
     }
 }

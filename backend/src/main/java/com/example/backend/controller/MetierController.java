@@ -58,20 +58,17 @@ public class MetierController {
     
         User user = userOpt.get();
     
-        // 🔁 Supprimer les anciennes compétences
         skillRepository.deleteByUser(user);
     
-        // ✅ Mettre à jour le métier suggéré
         user.setMetierSugg(metierSugg);
         userRepository.save(user);
     
-        // 🧠 Appel Gemini pour générer les compétences
         String skillsPrompt = "Liste les 10 compétences principales nécessaires pour devenir un " + metierSugg + ". Réponds uniquement avec une liste simple, une compétence par ligne.";
         JsonNode skillsJson = metierService.getGeminiResult(skillsPrompt);
     
         List<Skill> skills = extractSkillsFromJson(skillsJson, user);
         skillRepository.saveAll(skills);
-    
+        user.setTestDone(true);
         return ResponseEntity.ok("Nouveau métier : " + metierSugg + " avec compétences mises à jour.");
     }
     

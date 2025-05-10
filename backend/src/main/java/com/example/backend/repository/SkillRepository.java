@@ -9,5 +9,7 @@ import java.util.List;
 public interface SkillRepository extends JpaRepository<Skill, Long> {
     List<Skill> findByUserId(int userId);
     void deleteByUser(User user);
+    List<Skill> findByUser(User user);
+
 
 }
