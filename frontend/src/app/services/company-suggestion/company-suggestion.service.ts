@@ -8,11 +8,12 @@ import { CompanySuggestion } from '../../models/company-suggestion';
 })
 export class CompanySuggestionService {
 
-  private apiUrl = 'http://localhost:8080/api/company-suggestions';
+   private baseUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) { }
 
-    getSuggestions(userId: number): Observable<CompanySuggestion[]> {
-    return this.http.get<CompanySuggestion[]>(this.apiUrl);
+  getSuggestions(userId: number): Observable<CompanySuggestion[]> {
+    const url = `${this.baseUrl}/${userId}/suggested-companies`;
+    return this.http.get<CompanySuggestion[]>(url);
   }
 }

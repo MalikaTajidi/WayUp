@@ -11,32 +11,18 @@ import { CompanySuggestion } from '../models/company-suggestion';
   templateUrl: './company-suggestion.component.html',
   styleUrl: './company-suggestion.component.css'
 })
-export class CompanySuggestionComponent //implements OnInit {
+export class CompanySuggestionComponent implements OnInit 
  {
-   companies: CompanySuggestion[] = [];
+   private service = inject(CompanySuggestionService);
+
+  companies: CompanySuggestion[] = [];
+  userId = 1; // Replace with actual logged-in user ID
 
   ngOnInit() {
-    // Dummy data for testing
-    this.companies = [
-      {
-        id: 1,
-        name: 'TechNova',
-        description: 'Innovative solutions in cloud computing.',
-        industry: 'Information Technology',
-        location: 'San Francisco, CA',
-        size: '201-500',
-        foundedYear: 2015
-      },
-      {
-        id: 2,
-        name: 'GreenFields',
-        description: 'Sustainable agriculture and food production.',
-        industry: 'Agriculture',
-        location: 'Austin, TX',
-        size: '51-200',
-        foundedYear: 2010
-      }
-    ];
+    this.service.getSuggestions(this.userId).subscribe({
+      next: (data) => (this.companies = data),
+      error: (err) => console.error('Error fetching companies', err),
+    });
   }
 
  }
