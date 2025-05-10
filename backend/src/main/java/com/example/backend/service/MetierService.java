@@ -26,7 +26,6 @@ public class MetierService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // Corps de la requête
         Map<String, Object> part = new HashMap<>();
         part.put("text", prompt);
 
@@ -40,8 +39,6 @@ public class MetierService {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            String jsonBody = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
-            System.out.println("Requête envoyée à Gemini : \n" + jsonBody);
 
             ResponseEntity<String> response = restTemplate.postForEntity(
                 "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + geminiApiKey,
@@ -56,7 +53,6 @@ public class MetierService {
             return mapper.readTree(response.getBody());
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("Erreur lors de l'appel ou du parsing de l'API Gemini");
         }
     }
