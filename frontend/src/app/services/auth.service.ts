@@ -19,9 +19,16 @@ export class AuthService {
   }
 
   registerUser(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, userData);
+    return this.http.post(`${this.apiUrl}/register`, userData, {
+    responseType: 'text' 
+  });
+
   }
   getToken() {
     return localStorage.getItem('authToken');
+  }
+  getUser() {
+    const userData = localStorage.getItem('authUser');
+    return userData ? JSON.parse(userData) : null;
   }
 }
