@@ -20,6 +20,10 @@ public class AuthResponse {
          this.message = message;
      }
 
+     public AuthResponse(String string, AuthResponse token2, UserDTO userDTO) {
+      //TODO Auto-generated constructor stub
+     }
+
     // public AuthResponse(String message, String token) {
     //     this.message = message;
     //     this.token = token;

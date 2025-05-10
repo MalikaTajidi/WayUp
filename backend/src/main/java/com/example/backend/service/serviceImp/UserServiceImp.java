@@ -52,5 +52,9 @@ public class UserServiceImp implements UserService {
     String token = jwtProvider.generateToken(user.getEmail());
 
     return new AuthResponse("Login successful", token, user.getId(), user.getEmail());
-}    
+}   
+
+public User getUserById(int userId) {
+        return userRepository.findById(userId).orElse(null); // ou vous pouvez gérer l'exception selon votre logique
+    }
   }
