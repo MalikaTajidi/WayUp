@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.entities.Skill;
 import com.example.backend.repository.SkillRepository;
 import com.example.backend.repository.UserRepository;
-import com.example.backend.entities.User;
 
 // SkillController.java
 @RestController

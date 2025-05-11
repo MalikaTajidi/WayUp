@@ -2,24 +2,31 @@ package com.example.backend.service.serviceImp;
 
 
 
+import java.util.List;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.config.JwtProvider;
 import com.example.backend.dto.LoginDTO;
 import com.example.backend.dto.RegisterDTO;
+import com.example.backend.entities.Formation;
 import com.example.backend.entities.User;
+import com.example.backend.repository.FormationRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.service.servicesInterfaces.UserService;
 
 @Service
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
+        private final FormationRepository formationRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-    public UserServiceImp(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider) {
+
+    public UserServiceImp(UserRepository userRepository,FormationRepository formationRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider) {
         this.userRepository = userRepository;
+        this.formationRepository = formationRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
     }
@@ -49,10 +56,15 @@ public class UserServiceImp implements UserService {
 
         return jwtProvider.generateToken(user.getEmail());
     }
-  
+
 public User getUserById(int userId) {
         return userRepository.findById(userId).orElse(null); // ou vous pouvez gérer l'exception selon votre logique
     }
     
+
+
+    public List<Formation> getFormationsByUserId(int userId) {
+    return formationRepository.findByUserId(userId);
+}
 
     }

@@ -11,24 +11,17 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
 
-   }
-   login(email: string, password: string): Observable<any> {
+  }
+  login(email: string, password: string): Observable<any> {
     const loginData = { email, password }; 
     console.log(loginData);
     return this.http.post(`${this.apiUrl}/login`, loginData, { headers: { 'Content-Type': 'application/json' },  responseType: 'json' });
   }
 
   registerUser(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, userData, {
-    responseType: 'text' 
-  });
-
+    return this.http.post(`${this.apiUrl}/register`, userData);
   }
   getToken() {
     return localStorage.getItem('authToken');
-  }
-  getUser() {
-    const userData = localStorage.getItem('authUser');
-    return userData ? JSON.parse(userData) : null;
   }
 }

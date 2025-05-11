@@ -8,11 +8,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -126,4 +127,29 @@ public class FormationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur de communication avec l'API Gemini : " + e.getMessage());
         }
     }
+
+    @GetMapping("/getUserFormations")
+    public ResponseEntity<Object> getUserFormations(@RequestHeader("userId") int userId) {
+    try {
+        // Récupérer l'utilisateur par son ID
+        User user = userService.getUserById(userId);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur non trouvé.");
+        }
+
+        // Récupérer les formations associées à cet utilisateur
+        List<Formation> formations = formationService.getFormationsByUserId(userId);
+
+        if (formations.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucune formation trouvée pour cet utilisateur.");
+        }
+
+        return ResponseEntity.ok(formations);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la récupération des formations : " + e.getMessage());
+    }
+}
+
 }
