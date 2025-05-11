@@ -1,0 +1,24 @@
+<section class="p-6 max-w-xl mx-auto bg-white rounded-xl shadow-md">
+  <h1 class="text-2xl font-bold mb-4 text-center">Faire un test</h1>
+  <form (ngSubmit)="submitTest()">
+    <div *ngFor="let question of questions; let i = index" class="mb-4">
+      <label class="block font-medium mb-1">{{ question }}</label>
+      <input
+        type="text"
+        class="w-full border border-gray-300 p-2 rounded"
+        [(ngModel)]="answers[i]"
+        name="answer{{ i }}"
+        required
+      />
+    </div>
+
+    <div class="text-center mt-6">
+      <button
+        type="submit"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+      >
+        Envoyer le test
+      </button>
+    </div>
+  </form>
+</section>

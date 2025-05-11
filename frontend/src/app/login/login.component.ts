@@ -37,34 +37,73 @@ export class LoginComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
+  // onSubmit() {
+  //   if (this.loginForm.valid) {
+  //     const { email, password} = this.loginForm.value;
+  
+  //     this.authService.login(email, password).subscribe(
+  //       (response: any) => {
+  //         console.log('lets gooo', response);
+  
+  //         const token = response.token; 
+
+  //           localStorage.setItem('authToken', token); 
+  //           this.router.navigate(['/']);
+
+  //       },
+  //       (error: any) => {
+  //         console.error('connexion error : ', error);
+  //       }
+  //     );
+  //   } else {
+  //     console.log('invalid Form');
+  //   }
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   onSubmit() {
-    if (this.loginForm.valid) {
-      const { email, password} = this.loginForm.value;
-  
-      this.authService.login(email, password).subscribe(
-        (response: any) => {
-          console.log('lets gooo', response);
-  
-          const token = response.token; 
+  if (this.loginForm.valid) {
+    const { email, password } = this.loginForm.value;
 
-            localStorage.setItem('authToken', token); 
+    this.authService.login(email, password).subscribe(
+      (response: any) => {
+        console.log('lets gooo', response);
 
+        const token = response.token;
+        const testDone = response.user.testDone;
+        const futurMetier = response.futurMetier;
 
-          const user = { id: response.userId, email: response.email };
-          
-          localStorage.setItem('authUser', JSON.stringify(user));
+        localStorage.setItem('authToken', token);
+        localStorage.setItem('user', JSON.stringify(response.user)); // ✅ CORRECT
 
 
-            this.router.navigate(['/']);
-
-        },
-        (error: any) => {
-          console.error('connexion error : ', error);
+        // Redirection selon si le test a été fait
+        if (testDone) {
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.router.navigate(['/faire-test']);
         }
-      );
-    } else {
-      console.log('invalid Form');
-    }
+      },
+      (error: any) => {
+        console.error('connexion error : ', error);
+      }
+    );
+  } else {
+    console.log('invalid Form');
   }
+}
+
 
 }

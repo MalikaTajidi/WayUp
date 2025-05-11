@@ -15,9 +15,6 @@ import com.example.backend.dto.RegisterDTO;
 import com.example.backend.dto.UserDTO;
 import com.example.backend.entities.User;
 import com.example.backend.repository.UserRepository;
-
-import com.example.backend.dto.AuthResponse;
-
 import com.example.backend.service.servicesInterfaces.UserService;
 
 @RestController
@@ -41,7 +38,7 @@ public class AuthController {
   @PostMapping("/login")
 public ResponseEntity<AuthResponse> login(@Validated @RequestBody LoginDTO request) {
     User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-    AuthResponse token = userService.login(request);
+    String token = userService.login(request);
     UserDTO userDTO = new UserDTO(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(),user.getMetierSugg(),user.isTestDone());
 
     return ResponseEntity.ok(new AuthResponse("Login successful", token, userDTO));

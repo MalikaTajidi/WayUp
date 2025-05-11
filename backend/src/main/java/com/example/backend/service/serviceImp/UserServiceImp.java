@@ -6,7 +6,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.config.JwtProvider;
-import com.example.backend.dto.AuthResponse;
 import com.example.backend.dto.LoginDTO;
 import com.example.backend.dto.RegisterDTO;
 import com.example.backend.entities.User;
@@ -39,22 +38,21 @@ public class UserServiceImp implements UserService {
         userRepository.save(user);
         return "User registered successfully: " + user.getEmail();
     }
+    @Override
+    public String login(LoginDTO request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
 
-   @Override
-   public AuthResponse login(LoginDTO request) {
-    User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid email or password.");
+        }
 
-    if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-        throw new IllegalArgumentException("Invalid email or password.");
+        return jwtProvider.generateToken(user.getEmail());
     }
-
-    String token = jwtProvider.generateToken(user.getEmail());
-
-    return new AuthResponse("Login successful", token, user.getId(), user.getEmail());
-}   
-
+  
 public User getUserById(int userId) {
         return userRepository.findById(userId).orElse(null); // ou vous pouvez gérer l'exception selon votre logique
     }
-  }
+    
+
+    }
