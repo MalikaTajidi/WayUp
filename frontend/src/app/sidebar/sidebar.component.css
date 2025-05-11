@@ -1,0 +1,19 @@
+.sidebar-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease-in-out;
+}
+
+.sidebar-header h3 {
+  font-size: 1.75rem;
+}
+
+.sidebar-nav li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.sidebar-footer {
+  font-size: 0.875rem;
+}
