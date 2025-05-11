@@ -6,6 +6,6 @@ import com.example.backend.dto.RegisterDTO;
 
 public interface UserService {
     String register(RegisterDTO request);
-    AuthResponse login(LoginDTO request);
+    String login(LoginDTO request);
    
 }

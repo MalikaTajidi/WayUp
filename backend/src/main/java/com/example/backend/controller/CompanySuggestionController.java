@@ -42,7 +42,7 @@ public class CompanySuggestionController {
     
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/{id}/suggested-companies")
-    public ResponseEntity<?> getSuggestedCompanies(@PathVariable Long id) {
+    public ResponseEntity<?> getSuggestedCompanies(@PathVariable int id) {
         Optional<User> optionalUser = userRepository.findById(id);
         
         if (optionalUser.isEmpty()) {
