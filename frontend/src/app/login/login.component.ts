@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
 
           const user = { id: response.userId, email: response.email };
           
-          localStorage.setItem('authUser', JSON.stringify(user));
+          localStorage.setItem('user', JSON.stringify(user));
 
 
             this.router.navigate(['/']);

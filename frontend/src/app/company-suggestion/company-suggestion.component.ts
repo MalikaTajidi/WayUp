@@ -19,7 +19,7 @@ export class CompanySuggestionComponent implements OnInit
   userId!: number;
 
   ngOnInit() {
-    const userData = localStorage.getItem('authUser');
+    const userData = localStorage.getItem('user');
    if (userData) {
       const parsedUser = JSON.parse(userData);
       this.userId = parsedUser.id;
