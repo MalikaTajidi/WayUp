@@ -14,32 +14,22 @@ export class FormationService {
 
   // Service pour récupérer les formations d'un métier
 getFormations(metier: string, userId: number): Observable<any> {
-  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-  return this.http.post<any>(`http://localhost:8080/api/getFormations/${userId}`, { metier }, { headers });
+  const headers = new HttpHeaders({ 
+    'Content-Type': 'application/json',
+    'userId': userId.toString() 
+  });
+  return this.http.post<any>('http://localhost:8080/api/getFormations', { metier }, { headers });
 }
 
 
+  // Service pour récupérer les formations d'un utilisateur
 getUserFormations(userId: number): Observable<any> {
-  const token = localStorage.getItem('authToken'); // Récupérer le token dans le localStorage
-  console.log("id dans service", userId);
-  console.log("Token:", token);
-
-  if (!token) {
-    console.error('Token manquant. Vous devez vous authentifier.');
-    return new Observable(observer => observer.error('Token manquant. Veuillez vous connecter.'));
-  }
-
-  // Définir l'en-tête Authorization avec le token
   const headers = new HttpHeaders({
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`  // Ajouter le token d'authentification
+    'user-id': userId.toString()  // Notez le camelCase dans l'en-tête
   });
 
-  // Construire l'URL avec l'ID utilisateur
-  const url = `http://localhost:8080/api/userFormations/${userId}`;
-
-  // Effectuer la requête GET avec l'URL et les en-têtes
-  return this.http.get<any>(url, { headers });
+  return this.http.get<any>(`${this.userFormationsUrl}`, { headers });
 }
 
 
