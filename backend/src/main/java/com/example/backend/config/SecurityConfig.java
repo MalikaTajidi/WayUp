@@ -25,7 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private static final String[] PUBLIC_ENDPOINTS = { "/register", "/login", "/test/**","/api/resultat/**"};
+    private static final String[] PUBLIC_ENDPOINTS = { "/register","/register", "/login", "/test/**","/api/resultat/**"};
 
     private final JwtAuthenticationFilter jwtAuthFilter;
 
