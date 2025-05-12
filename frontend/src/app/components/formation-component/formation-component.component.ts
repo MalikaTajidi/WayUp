@@ -63,37 +63,48 @@ ngOnInit(): void {
 
 
   
-
 onSubmit() {
-    const user = localStorage.getItem('user');
+  const user = localStorage.getItem('user');
   const userId = user ? JSON.parse(user)?.id : null;
-     const metier = user ? JSON.parse(user)?.metierSugg : null;
+  const metier = user ? JSON.parse(user)?.metierSugg : null;
 
-console.log("metieer",userId)
-console.log("metieer",metier)
-    if (metier && userId) {
-      this.formationService.getFormations(metier, +userId).subscribe({
-        next: (response) => {
-          console.log('Formations enregistrées:');
+  console.log("User ID:", userId);
+  console.log("Métier:", metier);
+
+  if (metier && userId) {
+    this.formationService.getFormations(metier, +userId).subscribe({
+      next: (response) => {
+        // Vérification du statut de la réponse
+        if (response && response.status === 'success') {
+          this.error = '';
+          console.log('Réponse de l\'API :', response.message);
+          // Traitement des formations de l'utilisateur
           this.formationService.getUserFormations(+userId).subscribe({
             next: (userFormations) => {
               this.formations = userFormations;
-              this.error = '';
-              console.log('Formations utilisateur:', userFormations);
-            },
+            
+  //  
+          },
             error: (err) => {
               this.error = 'Erreur lors de la récupération des formations';
               console.error('Erreur API:', err);
             }
           });
-        },
-        error: (err) => {
-          this.error = 'Erreur lors de l\'enregistrement des formations';
-          console.error('Erreur API:', err);
+        } else {
+          // Si le statut est 'error', afficher le message d'erreur
+          this.error = response?.message || 'Erreur inconnue';
+          console.error('Erreur API:', response?.message);
         }
-      });
-    } else {
-      this.error = 'Veuillez vous connecter pour récupérer les formations.';
-    }
+      },
+      error: (err) => {
+    
+      }
+    });
+  } else {
+    this.error = 'Veuillez vous connecter pour récupérer les formations.';
   }
+    // this.router.navigate(['/formation']);
+    
+}
+
 }

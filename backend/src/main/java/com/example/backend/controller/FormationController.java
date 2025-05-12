@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,24 +33,19 @@ public class FormationController {
 
     @Autowired
     private UserServiceImp userService;
+    
+    
 
-@PostMapping("/getFormations")
-public ResponseEntity<Object> getFormations(@RequestBody String metier, @RequestHeader("userId") int userId) {
+  @PostMapping("/getFormations/{userId}")
+public ResponseEntity<Object> getFormations(@PathVariable int userId, @RequestBody String metier) {
     try {
-        // Récupérer l'utilisateur par son ID unique
-        User user = userService.getUserById(userId);
-
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur non trouvé.");
-        }
-
-        // Construire la question dynamique pour l'API Gemini
+        // Construire la question dynamique
         String question = String.format(
-            "Quelles sont les formations nécessaires pour devenir %s ? Merci de répondre sous forme de JSON avec les champs 'name' pour le nom de la formation et 'url' pour le lien vers la formation.",
+            "Quelles sont les technologies et compétences nécessaires pour devenir %s  au niveau d'etude ? Merci de répondre sous forme de JSON avec les champs 'name' pour le nom de la technologie/compétence et 'url' pour le lien vers la ressource d'apprentissage.",
             metier
         );
 
-        // Créer le corps de la requête pour Gemini
+        // Utiliser ObjectMapper pour créer le corps de la requête
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode textNode = objectMapper.createObjectNode();
         textNode.put("text", question);
@@ -71,6 +67,7 @@ public ResponseEntity<Object> getFormations(@RequestBody String metier, @Request
         // URL de l'API Gemini
         String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey;
 
+        // Préparer la requête avec RestTemplate
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -78,62 +75,74 @@ public ResponseEntity<Object> getFormations(@RequestBody String metier, @Request
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
         // Effectuer la requête
-        ResponseEntity<String> response = restTemplate.exchange(
-            url, HttpMethod.POST, entity, String.class
-        );
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
-        // Vérifier la réponse
         if (response.getStatusCode() != HttpStatus.OK) {
-            return ResponseEntity.status(response.getStatusCode()).body("Erreur lors de l'appel à l'API Gemini.");
+            return ResponseEntity.status(response.getStatusCode()).body(createJsonResponse("error", "Erreur lors de l'appel à l'API Gemini."));
         }
 
-        // Analyser la réponse de l'API Gemini
+        // Analyser la réponse JSON
         JsonNode rootNode = objectMapper.readTree(response.getBody());
         JsonNode candidatesNode = rootNode.path("candidates");
 
         if (candidatesNode.isArray() && candidatesNode.size() > 0) {
             JsonNode contentNodeResponse = candidatesNode.get(0).path("content").path("parts").get(0).path("text");
-            String jsonText = contentNodeResponse.asText().replace("json", "").replace("", "").trim();
+            String jsonText = contentNodeResponse.asText().replace("```json", "").replace("```", "").trim();
 
-            // Vérifier et enregistrer les formations
             JsonNode formationsNode;
             try {
                 formationsNode = objectMapper.readTree(jsonText);
             } catch (Exception ex) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Format de réponse inattendu.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(createJsonResponse("error", "Format de réponse inattendu."));
             }
 
+            // Récupérer l'utilisateur depuis la base de données
+            Optional<User> userOptional = Optional.ofNullable(userService.getUserById(userId));
+            if (userOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(createJsonResponse("error", "Utilisateur non trouvé."));
+            }
+            User user = userOptional.get();
+
+            // Enregistrer les formations
             if (formationsNode.isArray()) {
-                for (JsonNode formationJson : formationsNode) {
-                    String formationName = formationJson.path("name").asText();
-                    String urlFormation = formationJson.path("url").asText();
+                for (JsonNode formation : formationsNode) {
+                    String formationName = formation.path("name").asText();
+                    String urlFormation = formation.path("url").asText();
 
-                    // Créer l'objet Formation et associer l'utilisateur
-                    Formation formation = new Formation();
-                    formation.setFormationName(formationName);
-                    formation.setUrl(urlFormation);
-                    formation.setUser(user);  // Associer l'utilisateur authentifié
+                    Formation newFormation = new Formation();
+                    newFormation.setFormationName(formationName);
+                    newFormation.setUrl(urlFormation);
+                    newFormation.setUser(user);
 
-                    // Enregistrer la formation dans la base de données
-                    formationService.saveFormation(formation);
+                    formationService.saveFormation(newFormation);
                 }
-
-                // Retourner la réponse sous forme de JSON avec un message
-                Map<String, String> responseMap = new HashMap<>();
-                responseMap.put("message", "Formations enregistrées avec succès.");
-                return ResponseEntity.ok(responseMap);
+                return ResponseEntity.ok(createJsonResponse("success", "Formations enregistrées avec succès."));
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La réponse de l'API n'est pas sous forme de liste.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(createJsonResponse("error", "Les données retournées ne sont pas au format attendu."));
             }
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucune formation trouvée.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(createJsonResponse("error", "Aucune formation trouvée."));
         }
 
     } catch (Exception e) {
         e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur de communication avec l'API Gemini : " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(createJsonResponse("error", "Erreur : " + e.getMessage()));
     }
 }
+
+private String createJsonResponse(String status, String message) {
+    try {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode responseNode = objectMapper.createObjectNode();
+        responseNode.put("status", status);
+        responseNode.put("message", message);
+        return objectMapper.writeValueAsString(responseNode);
+    } catch (Exception e) {
+        return "{\"status\": \"error\", \"message\": \"Erreur de création de réponse JSON\"}";
+    }
+}
+
+
 
 @GetMapping("/userFormations/{userId}")
 public ResponseEntity<Object> getUserFormations(@PathVariable("userId") int userId) {
