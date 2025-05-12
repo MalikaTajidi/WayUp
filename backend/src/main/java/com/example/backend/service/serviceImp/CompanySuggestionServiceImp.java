@@ -126,11 +126,11 @@ public class CompanySuggestionServiceImp implements CompanySuggestionService {
                                                .getString("text");
                 
                 // Clean up potential markdown formatting
-                if (textContent.contains("```json")) {
-                    textContent = textContent.replaceAll("```json", "");
+                if (textContent.contains("json")) {
+                    textContent = textContent.replaceAll("json", "");
                 }
-                if (textContent.contains("```")) {
-                    textContent = textContent.replaceAll("```", "");
+                if (textContent.contains("")) {
+                    textContent = textContent.replaceAll("", "");
                 }
                 
                 // Trim any whitespace and check if it's empty
