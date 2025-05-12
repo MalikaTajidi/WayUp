@@ -35,7 +35,7 @@ public class CompanySuggestionServiceImp implements CompanySuggestionService {
 
         try {
             String prompt = String.format("""
-                List 10 companies hiring for the role of %s in Morocco.
+                List 9 companies hiring for the role of %s in Morocco.
                 Return ONLY a JSON array in this exact format:
                 [
                   {

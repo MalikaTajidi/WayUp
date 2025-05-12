@@ -3,11 +3,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { CompanySuggestionService } from '../services/company-suggestion/company-suggestion.service';
 import { CompanySuggestion } from '../models/company-suggestion';
+import { SidebarComponent } from "../sidebar/sidebar.component";
 
 @Component({
   selector: 'app-company-suggestion',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SidebarComponent],
   templateUrl: './company-suggestion.component.html',
   styleUrl: './company-suggestion.component.css'
 })
