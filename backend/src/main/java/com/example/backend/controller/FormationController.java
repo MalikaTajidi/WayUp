@@ -9,8 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -147,8 +145,6 @@ private String createJsonResponse(String status, String message) {
 @GetMapping("/userFormations/{userId}")
 public ResponseEntity<Object> getUserFormations(@PathVariable("userId") int userId) {
     try {
-        System.err.println("User récupéré depuis l'URL: " + userId);
-
         // Récupérer l'utilisateur par son ID
         User user = userService.getUserById(userId);
 
@@ -159,21 +155,15 @@ public ResponseEntity<Object> getUserFormations(@PathVariable("userId") int user
         // Récupérer les formations associées à cet utilisateur
         List<Formation> formations = formationService.getFormationsByUserId(userId);
 
-        // Si la liste est vide, retourner une liste vide avec un code 200 OK
         if (formations.isEmpty()) {
-            System.out.println("Aucune formation trouvée pour cet utilisateur.");
-            return ResponseEntity.ok(Collections.emptyList());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucune formation trouvée pour cet utilisateur.");
         }
 
-        // Retourner les formations avec le code 200 OK
         return ResponseEntity.ok(formations);
     } catch (Exception e) {
         e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erreur lors de la récupération des formations : " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la récupération des formations : " + e.getMessage());
     }
 }
-
-
 
 }
