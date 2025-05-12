@@ -32,24 +32,24 @@ public class FormationController {
 
     @Autowired
     private UserServiceImp userService;
-
-@PostMapping("/getFormations")
-public ResponseEntity<Object> getFormations(@RequestBody String metier, @RequestHeader("userId") int userId) {
+    
+@PostMapping("/getFormations/{userId}")
+public ResponseEntity<Object> getFormations(@PathVariable int userId, @RequestBody String metier) {
     try {
         // Récupérer l'utilisateur par son ID unique
         User user = userService.getUserById(userId);
-
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur non trouvé.");
         }
 
         // Construire la question dynamique pour l'API Gemini
         String question = String.format(
-            "Quelles sont les formations nécessaires pour devenir %s ? Merci de répondre sous forme de JSON avec les champs 'name' pour le nom de la formation et 'url' pour le lien vers la formation.",
+            "Quelles sont les formations nécessaires pour devenir spécialiste dans le métier suivant : %s ? "
+            + "Merci de répondre sous forme de JSON avec les champs 'name' pour le nom de la formation et 'url' pour le lien vers la formation.",
             metier
         );
 
-        // Créer le corps de la requête pour Gemini
+        // Préparer la requête pour l'API Gemini
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode textNode = objectMapper.createObjectNode();
         textNode.put("text", question);
@@ -78,12 +78,10 @@ public ResponseEntity<Object> getFormations(@RequestBody String metier, @Request
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
         // Effectuer la requête
-        ResponseEntity<String> response = restTemplate.exchange(
-            url, HttpMethod.POST, entity, String.class
-        );
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
-        // Vérifier la réponse
-        if (response.getStatusCode() != HttpStatus.OK) {
+        // Vérifier la réponse de l'API Gemini
+        if (!response.getStatusCode().is2xxSuccessful()) {
             return ResponseEntity.status(response.getStatusCode()).body("Erreur lors de l'appel à l'API Gemini.");
         }
 
@@ -93,14 +91,14 @@ public ResponseEntity<Object> getFormations(@RequestBody String metier, @Request
 
         if (candidatesNode.isArray() && candidatesNode.size() > 0) {
             JsonNode contentNodeResponse = candidatesNode.get(0).path("content").path("parts").get(0).path("text");
-            String jsonText = contentNodeResponse.asText().replace("json", "").replace("", "").trim();
+            String jsonText = contentNodeResponse.asText().trim();
 
             // Vérifier et enregistrer les formations
             JsonNode formationsNode;
             try {
                 formationsNode = objectMapper.readTree(jsonText);
             } catch (Exception ex) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Format de réponse inattendu.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Format de réponse inattendu : " + ex.getMessage());
             }
 
             if (formationsNode.isArray()) {
@@ -112,13 +110,12 @@ public ResponseEntity<Object> getFormations(@RequestBody String metier, @Request
                     Formation formation = new Formation();
                     formation.setFormationName(formationName);
                     formation.setUrl(urlFormation);
-                    formation.setUser(user);  // Associer l'utilisateur authentifié
+                    formation.setUser(user);
 
                     // Enregistrer la formation dans la base de données
                     formationService.saveFormation(formation);
                 }
 
-                // Retourner la réponse sous forme de JSON avec un message
                 Map<String, String> responseMap = new HashMap<>();
                 responseMap.put("message", "Formations enregistrées avec succès.");
                 return ResponseEntity.ok(responseMap);
@@ -134,6 +131,7 @@ public ResponseEntity<Object> getFormations(@RequestBody String metier, @Request
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur de communication avec l'API Gemini : " + e.getMessage());
     }
 }
+
 
 @GetMapping("/userFormations/{userId}")
 public ResponseEntity<Object> getUserFormations(@PathVariable("userId") int userId) {
