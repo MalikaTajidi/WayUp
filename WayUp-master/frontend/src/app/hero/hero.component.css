@@ -1,0 +1,45 @@
+.hero {
+  padding: 60px 0;
+  background-color: var(--bg-light-purple);
+  text-align: left;
+}
+
+.hero-content {
+  max-width: 600px;
+}
+
+.hero h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.hero h1 span {
+  color: var(--primary-color);
+}
+
+.hero p {
+  font-size: 18px;
+  color: var(--text-gray);
+  margin-bottom: 30px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.search-box {
+  background-color: var(--white);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-top: 40px;
+}
+
+.search-box h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}

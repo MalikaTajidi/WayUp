@@ -1,0 +1,40 @@
+
+<div class="container mx-auto px-4 py-4">
+  <h2 class="mb-4 text-[#7E3FF2] text-2xl font-bold">🔍 Recherche de stages</h2>
+  
+  <div class="flex mb-3">
+    <input
+      [(ngModel)]="jobTitle"
+      type="text"
+      class="flex-1 rounded-r-none h-10 px-3 py-2 border border-input bg-background text-base focus:outline-none focus:ring-2 focus:ring-ring"
+      placeholder="Ex: Développeur Web"
+    />
+    <button 
+      (click)="search()" 
+      class="bg-[#7E3FF2] hover:bg-[#6932c8] text-white rounded-l-none h-10 px-4 py-2"
+    >
+      Rechercher
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="p-4 mb-3 bg-blue-50 text-blue-700 rounded-md">
+    ⏳ Chargement...
+  </div>
+  
+  <div *ngIf="errorMessage" class="p-4 mb-3 bg-red-50 text-red-700 rounded-md">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="internships.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div *ngFor="let internship of internships" class="card shadow-sm rounded-lg border border-gray-200 h-full transition-transform duration-300 hover:translate-y-[-5px]">
+      <div class="p-6">
+        <h3 class="text-xl font-semibold text-[#7E3FF2] mb-1">{{ internship.title }}</h3>
+        <h4 class="text-gray-500 font-medium mb-3">{{ internship.company }}</h4>
+        <p class="mb-1"><span class="font-bold">📍 Lieu:</span> {{ internship.location }}</p>
+        <p class="mb-1"><span class="font-bold">🕒 Durée:</span> {{ internship.duration }}</p>
+        <p class="mb-2"><span class="font-bold">📄 Description:</span> {{ internship.description }}</p>
+        <p class="mb-0"><span class="font-bold">✅ Compétences:</span> {{ internship.requirements }}</p>
+      </div>
+    </div>
+  </div>
+</div>

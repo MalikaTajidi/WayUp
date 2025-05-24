@@ -1,0 +1,10 @@
+<nav class="navbar container">
+  <div class="logo">CareerMatch</div>
+  <div class="nav-links">
+    <a href="{{ link.url }}" *ngFor="let link of navLinks">{{ link.title }}</a>
+  </div>
+  <div class="auth-buttons">
+    <a href="#" class="btn btn-outline">Se connecter</a>
+    <a href="#" class="btn btn-primary">S'inscrire</a>
+  </div>
+</nav>
