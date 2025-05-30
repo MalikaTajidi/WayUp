@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class UserService {
 
- private baseUrl = 'http://localhost:8080/api';
+  private baseUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
 
@@ -22,8 +22,6 @@ updateSkill(skillId: number, updated: any): Observable<any> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
     return this.http.put(`${this.baseUrl}/skills/${skillId}`, updated, { headers });
   }
-
-  
 getUserById(userId: number): Observable<any> {
   return this.http.get<any>(`http://localhost:8080/api/users/${userId}`);
 }

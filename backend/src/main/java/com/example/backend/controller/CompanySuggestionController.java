@@ -32,9 +32,8 @@ public class CompanySuggestionController {
     @Autowired
     private ApplicationContext context;
     
-    public CompanySuggestionController(UserRepository userRepository, 
-                                      CompanySuggestionService geminiService, 
-                                      ObjectMapper objectMapper) {
+    public CompanySuggestionController(UserRepository userRepository,  CompanySuggestionService geminiService, 
+        ObjectMapper objectMapper) {
         this.userRepository = userRepository;
         this.geminiService = geminiService;
         this.objectMapper = objectMapper;

@@ -21,7 +21,7 @@ import com.example.backend.service.servicesInterfaces.UserService;
 
 public class AuthController {
 
-     @Autowired
+    @Autowired
     private UserRepository userRepository;
     private final UserService userService;
 
@@ -35,7 +35,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
     @CrossOrigin(origins = "http://localhost:4200")
-  @PostMapping("/login")
+@PostMapping("/login")
 public ResponseEntity<AuthResponse> login(@Validated @RequestBody LoginDTO request) {
     User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
     String token = userService.login(request);

@@ -87,6 +87,7 @@ export class LoginComponent implements OnInit {
 
         localStorage.setItem('authToken', token);
         localStorage.setItem('user', JSON.stringify(response.user)); // ✅ CORRECT
+        console.log('User ID après authentification:', localStorage.getItem('user'));
 
 
         // Redirection selon si le test a été fait

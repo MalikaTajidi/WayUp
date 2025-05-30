@@ -7,15 +7,15 @@ public class AuthResponse {
     private String token;
     private UserDTO user;
 
-     public AuthResponse(String message) {
-         this.message = message;
-     }
+    public AuthResponse(String message) {
+     this.message = message;
+ }
 
     public AuthResponse(String message, String token) {
         this.message = message;
         this.token = token;
     }
-     public AuthResponse(String message, String token,UserDTO user) {
+    public AuthResponse(String message, String token,UserDTO user) {
         this.message = message;
         this.token = token;
         this.user = user;
