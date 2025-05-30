@@ -1,0 +1,197 @@
+<!-- Navbar -->
+<nav class="bg-gradient-to-b from-indigo-100 to-purple-100 bg-opacity-80 rounded-xl shadow-lg border border-purple-200 mt-4">
+  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+    <a href="#" class="flex items-center space-x-3">
+      <span class="text-2xl font-bold text-purple-700">WayUp</span>
+    </a>
+    <div class="flex md:order-2 space-x-3">
+      <button type="button" class="text-white bg-purple-600 hover:bg-purple-700 font-medium rounded-lg text-sm px-4 py-2">Get Started</button>
+      <button (click)="toggleMenu()" type="button" class="md:hidden text-gray-500 p-2 rounded hover:bg-gray-200">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 17 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M1 1h15M1 7h15M1 13h15" />
+        </svg>
+      </button>
+    </div>
+    <div [ngClass]="{'hidden': !isMenuVisible, 'block': isMenuVisible }" class="lg:flex md:flex items-center w-full md:w-auto md:order-1">
+      <ul class="flex flex-col md:flex-row md:space-x-8">
+        <li><a href="#" class="text-purple-700 font-medium">Home</a></li>
+        <li><a href="#features" class="text-gray-600 hover:text-purple-700">Features</a></li>
+        <li><a href="#companies" class="text-gray-600 hover:text-purple-700">Companies</a></li>
+        <li><a href="#offers" class="text-gray-600 hover:text-purple-700">Offers</a></li>
+        <li><a href="#contact" class="text-gray-600 hover:text-purple-700">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<section class="flex flex-col-reverse md:flex-row items-center bg-gradient-to-r from-purple-50 to-indigo-50">
+  <div class="w-full md:w-1/2 p-6">
+    <h1 class="text-4xl font-extrabold mt-10">Find the Right <span class="text-purple-700">Career</span> & <span class="text-purple-700">Training</span></h1>
+    <p class="text-lg mt-4 text-gray-700">Discover companies, explore job offers, and get personalized recommendations to boost your career.</p>
+    <button routerLink="/login" class="mt-6 px-6 py-3 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700 transition duration-300">Start Now</button>
+  </div>
+  <div class="w-full md:w-1/2">
+    <img src="photo.png" alt="WayUp Career" class="w-full h-auto">
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section id="stats" class="py-16 bg-purple-50">
+  <div class="max-w-6xl mx-auto text-center">
+    <h2 class="text-4xl font-bold text-gray-800 mb-10">In Numbers</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div>
+        <p class="text-5xl font-extrabold text-purple-700" [innerText]="stat1"></p>
+        <p class="mt-2 text-gray-600">Active Users</p>
+      </div>
+      <div>
+        <p class="text-5xl font-extrabold text-purple-700" [innerText]="stat2"></p>
+        <p class="mt-2 text-gray-600">Partner Companies</p>
+      </div>
+      <div>
+        <p class="text-5xl font-extrabold text-purple-700" [innerText]="stat3"></p>
+        <p class="mt-2 text-gray-600">Job Offers</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="bg-purple-50 py-20">
+  <div class="max-w-screen-xl mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center text-gray-800">Key Features</h2>
+    <div class="mt-12 grid gap-8 grid-cols-1 md:grid-cols-3">
+      <!-- Feature 1 -->
+      <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+        <div class="w-12 h-12 mb-4 bg-purple-100 text-purple-700 flex items-center justify-center rounded-full mx-auto">
+          <!-- Icon -->
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.75 3.75a7.5 7.5 0 0012.9 12.9z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-center">Smart Search</h3>
+        <p class="text-gray-600 mt-2 text-center">Quickly find jobs tailored to your profile.</p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+        <div class="w-12 h-12 mb-4 bg-purple-100 text-purple-700 flex items-center justify-center rounded-full mx-auto">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12h6m2 0a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v3a2 2 0 002 2zm0 0v6a2 2 0 002 2H7a2 2 0 01-2-2v-6"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-center">Company Discovery</h3>
+        <p class="text-gray-600 mt-2 text-center">View detailed company profiles and reviews.</p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+        <div class="w-12 h-12 mb-4 bg-purple-100 text-purple-700 flex items-center justify-center rounded-full mx-auto">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.285 3.944a1 1 0 00.95.69h4.154c.969 0 1.371 1.24.588 1.81l-3.36 2.444a1 1 0 00-.364 1.118l1.285 3.944c.3.921-.755 1.688-1.54 1.118l-3.36-2.444a1 1 0 00-1.175 0l-3.36 2.444c-.784.57-1.838-.197-1.54-1.118l1.285-3.944a1 1 0 00-.364-1.118L2.586 9.37c-.783-.57-.38-1.81.588-1.81h4.154a1 1 0 00.95-.69l1.285-3.944z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-center">Personalized Suggestions</h3>
+        <p class="text-gray-600 mt-2 text-center">Get smart recommendations based on your skills.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" class="bg-white py-20">
+  <div class="max-w-screen-xl mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center text-gray-800">What Users Say</h2>
+    <p class="text-gray-600 text-center mt-2 max-w-2xl mx-auto">
+      Discover how WayUp has helped thousands of people find the right career path and grow professionally.
+    </p>
+    <div class="mt-12 grid gap-8 grid-cols-1 md:grid-cols-3">
+      
+      <!-- Testimonial 1 -->
+      <div class="bg-gray-50 p-6 rounded-xl shadow hover:shadow-lg transition text-center">
+        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User 1"
+             class="w-16 h-16 rounded-full mx-auto mb-4 object-cover" />
+        <p class="text-gray-600 italic">“Thanks to MyApp, I found the perfect job match in just two weeks. The recommendations were spot on!”</p>
+        <p class="mt-4 font-semibold text-gray-800">— Sarah M., Product Designer</p>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="bg-gray-50 p-6 rounded-xl shadow hover:shadow-lg transition text-center">
+        <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="User 2"
+             class="w-16 h-16 rounded-full mx-auto mb-4 object-cover" />
+        <p class="text-gray-600 italic">“I’ve discovered companies I had never heard of before, and one turned out to be my dream employer!”</p>
+        <p class="mt-4 font-semibold text-gray-800">— Thomas B., Software Engineer</p>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="bg-gray-50 p-6 rounded-xl shadow hover:shadow-lg transition text-center">
+        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="User 3"
+             class="w-16 h-16 rounded-full mx-auto mb-4 object-cover" />
+        <p class="text-gray-600 italic">“The personalized suggestions really helped me refine my job search and land multiple interviews.”</p>
+        <p class="mt-4 font-semibold text-gray-800">— Emily R., Data Analyst</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- Footer -->
+<footer class="bg-gradient-to-b from-indigo-900 to-purple-900 text-gray-300 py-12">
+  <div class="max-w-screen-xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+    
+    <!-- Logo & Description -->
+    <div>
+      <h3 class="text-2xl font-bold text-white mb-3">WayUp</h3>
+      <p class="text-gray-400">
+        Empowering your career journey with smart tools and insights. Discover jobs, explore companies, and grow with confidence.
+      </p>
+    </div>
+
+    <!-- Navigation Links -->
+    <div>
+      <h4 class="text-lg font-semibold text-white mb-3">Quick Links</h4>
+      <ul class="space-y-2">
+        <li><a href="#hero" class="hover:text-white transition">Home</a></li>
+        <li><a href="#features" class="hover:text-white transition">Features</a></li>
+        <li><a href="#stats" class="hover:text-white transition">Stats</a></li>
+        <li><a href="#testimonials" class="hover:text-white transition">Testimonials</a></li>
+      </ul>
+    </div>
+
+    <!-- Social Media -->
+    <div>
+      <h4 class="text-lg font-semibold text-white mb-3">Follow Us</h4>
+      <div class="flex space-x-4 mt-2">
+        <!-- Twitter -->
+        <a href="#" aria-label="Twitter" class="hover:text-white transition">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8.29 20c7.547 0 11.675-6.155 11.675-11.494 0-.175 0-.349-.012-.522A8.18 8.18 0 0022 5.92a8.273 8.273 0 01-2.357.631 4.077 4.077 0 001.804-2.243 8.19 8.19 0 01-2.605.981 4.108 4.108 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.256 4.01 4.01 0 001.27 5.482 4.104 4.104 0 01-1.86-.508v.05a4.11 4.11 0 003.292 4.02 4.066 4.066 0 01-1.853.07 4.1 4.1 0 003.834 2.82A8.233 8.233 0 012 18.407 11.616 11.616 0 008.29 20" />
+          </svg>
+        </a>
+        <!-- Facebook -->
+        <a href="#" aria-label="Facebook" class="hover:text-white transition">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M22 12a10 10 0 10-11.63 9.87v-6.99H7.1v-2.88h3.27V9.41c0-3.24 1.93-5.02 4.89-5.02 1.41 0 2.88.25 2.88.25v3.16h-1.63c-1.61 0-2.11.99-2.11 2v2.4h3.58l-.57 2.88h-3.01V22A10 10 0 0022 12" />
+          </svg>
+        </a>
+        <!-- LinkedIn -->
+        <a href="#" aria-label="LinkedIn" class="hover:text-white transition">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M4.98 3.5C3.88 3.5 3 4.38 3 5.48s.88 1.98 1.98 1.98a1.98 1.98 0 100-3.96zm.02 4.9H3V21h2V8.4zM8.54 8.4H11v1.71h.04c.34-.64 1.19-1.31 2.44-1.31 2.6 0 3.08 1.72 3.08 3.97V21h-2v-6.17c0-1.47-.03-3.35-2.05-3.35-2.05 0-2.36 1.6-2.36 3.25V21h-2V8.4z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom -->
+  <div class="mt-12 border-t border-gray-700 pt-6 text-center text-gray-500 text-sm">
+    &copy; 2025 WayUp. All rights reserved.
+  </div>
+</footer>
