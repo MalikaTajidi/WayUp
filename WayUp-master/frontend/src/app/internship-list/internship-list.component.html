@@ -1,119 +1,119 @@
-<div class="container mx-auto px-4 py-4">
-  <h2 class="mb-6 text-[#7E3FF2] text-2xl font-bold">💼 Stages disponibles</h2>
-  
-  <!-- Filtres optionnels -->
-  <div class="mb-6 p-4 bg-gray-50 rounded-lg">
-    <div class="flex flex-wrap gap-4">
-      <div class="flex-1 min-w-48">
-        <label class="block text-sm font-medium text-gray-700 mb-1">Filtrer par métier</label>
-        <input
-          [(ngModel)]="filterTitle"
-          (ngModelChange)="filterInternships()"
-          type="text"
-          class="w-full h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7E3FF2]"
-          placeholder="Ex: Développeur, Data Analyst..."
-        />
-      </div>
-      <div class="flex-1 min-w-48">
-        <label class="block text-sm font-medium text-gray-700 mb-1">Filtrer par lieu</label>
-        <select
-          [(ngModel)]="filterLocation"
-          (ngModelChange)="filterInternships()"
-          class="w-full h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7E3FF2]"
-        >
-          <option value="">Tous les lieux</option>
-          <option value="Casablanca">Casablanca</option>
-          <option value="Rabat">Rabat</option>
-          <option value="Tanger">Tanger</option>
-          <option value="Marrakech">Marrakech</option>
-        </select>
-      </div>
-      <div class="flex items-end">
-        <button
+<!-- internship-list.component.html -->
+
+<div class="fixed top-0 left-0 h-screen w-64 p-6 bg-white/10 backdrop-blur-lg shadow-lg z-10">
+  <app-sidebar></app-sidebar>
+</div>
+<div class="internship-container">
+  <div class="main-content">
+    <div class="header-section">
+      <h2>Internship Suggestions for You</h2>
+      <button 
+        class="refresh-btn" 
+        (click)="refreshInternships()" 
+        [disabled]="isLoading"
+        title="Refresh suggestions">
+        🔄 Refresh
+      </button>
+    </div>
+
+    <!-- Search Filters -->
+    <div class="filters-section" *ngIf="internships.length > 0 && !isLoading">
+      <div class="filter-group">
+        <input 
+          type="text" 
+          [(ngModel)]="filterTitle" 
+          (input)="filterInternships()"
+          placeholder="Search by title..."
+          class="filter-input">
+        
+        <input 
+          type="text" 
+          [(ngModel)]="filterLocation" 
+          (input)="filterInternships()"
+          placeholder="Search by location..."
+          class="filter-input">
+        
+        <button 
+          class="clear-filters-btn" 
           (click)="clearFilters()"
-          class="h-10 px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-100"
-        >
-          Réinitialiser
+          *ngIf="filterTitle || filterLocation">
+          Clear filters
         </button>
       </div>
     </div>
-  </div>
 
-  <!-- Messages de statut -->
-  <div *ngIf="loading" class="p-4 mb-3 bg-blue-50 text-blue-700 rounded-md">
-    ⏳ Chargement des stages...
-  </div>
+    <!-- Loading Display -->
+    <div *ngIf="isLoading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading internships...</p>
+    </div>
 
-  <div *ngIf="errorMessage" class="p-4 mb-3 bg-red-50 text-red-700 rounded-md">
-    {{ errorMessage }}
-  </div>
+    <!-- Error Display -->
+    <div *ngIf="error && !isLoading" class="error">
+      <div class="error-icon">⚠️</div>
+      <div class="error-content">
+        <h3>Error</h3>
+        <p>{{ error }}</p>
+        <button class="retry-btn" (click)="refreshInternships()">
+          Retry
+        </button>
+      </div>
+    </div>
 
-  <!-- Compteur de résultats -->
-  <div *ngIf="filteredInternships.length > 0" class="mb-4">
-    <p class="text-gray-600">
-      <span class="font-semibold">{{ filteredInternships.length }}</span> 
-      stage(s) trouvé(s)
-    </p>
-  </div>
+    <!-- No Results After Filtering -->
+    <div *ngIf="!isLoading && filteredInternships.length === 0 && internships.length > 0 && !error" class="no-results">
+      <div class="no-results-icon">🔍</div>
+      <h3>No Results</h3>
+      <p>No internships match your search criteria.</p>
+      <button class="clear-filters-btn" (click)="clearFilters()">
+        View all internships
+      </button>
+    </div>
 
-  <!-- Liste des stages -->
-  <div *ngIf="filteredInternships.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div *ngFor="let internship of filteredInternships" 
-         class="card shadow-sm rounded-lg border border-gray-200 h-full transition-all duration-300 hover:translate-y-[-5px] hover:shadow-lg">
-      <div class="p-6">
-        <div class="flex items-start justify-between mb-3">
-          <h3 class="text-xl font-semibold text-[#7E3FF2] mb-1">{{ internship.title }}</h3>
-          <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Disponible</span>
+    <!-- Internship List -->
+    <div *ngIf="!isLoading && filteredInternships.length > 0" class="internship-list">
+      <div class="results-count">
+        <p>{{ filteredInternships.length }} internship(s) found</p>
+      </div>
+      
+      <div *ngFor="let internship of filteredInternships; trackBy: trackByIndex" class="internship-card">
+        <div class="card-header">
+          <h3>{{ internship.title }}</h3>
+          <span class="company-badge">{{ internship.company }}</span>
         </div>
         
-        <h4 class="text-gray-600 font-medium mb-3 flex items-center">
-          🏢 {{ internship.company }}
-        </h4>
-        
-        <div class="space-y-2 mb-4">
-          <p class="flex items-center text-sm">
-            <span class="font-bold text-gray-700 w-20">📍 Lieu:</span> 
-            <span class="text-gray-600">{{ internship.location }}</span>
-          </p>
-          <p class="flex items-center text-sm">
-            <span class="font-bold text-gray-700 w-20">🕒 Durée:</span> 
-            <span class="text-gray-600">{{ internship.duration }}</span>
-          </p>
-        </div>
-        
-        <div class="mb-4">
-          <p class="font-bold text-gray-700 text-sm mb-1">📄 Description:</p>
-          <p class="text-gray-600 text-sm leading-relaxed">{{ internship.description }}</p>
-        </div>
-        
-        <div class="mb-4">
-          <p class="font-bold text-gray-700 text-sm mb-2">✅ Compétences requises:</p>
-          <div class="flex flex-wrap gap-1">
-            <span *ngFor="let skill of internship.requirements.split(', ')"
-                  class="bg-[#7E3FF2] bg-opacity-10 text-[#7E3FF2] text-xs px-2 py-1 rounded-full">
-              {{ skill }}
-            </span>
+        <div class="card-body">
+          <div class="internship-meta">
+            <div class="location-info">
+              <span class="location-icon">📍</span>
+              <span>{{ internship.location }}</span>
+            </div>
+            
+            <div class="duration-info">
+              <span class="duration-icon">⏱️</span>
+              <span>{{ internship.duration }}</span>
+            </div>
+            
+            <div class="start-date-info">
+              <span class="date-icon">📅</span>
+              <span>Start: {{ internship.startDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+          
+          <div class="description">
+            <p>{{ internship.description }}</p>
           </div>
         </div>
         
-        <div class="pt-4 border-t border-gray-100">
-          <button class="w-full bg-[#7E3FF2] hover:bg-[#6932c8] text-white py-2 px-4 rounded-md transition-colors duration-200">
-            Postuler
+        <div class="card-footer">
+          <button class="contact-btn">
+            Contact Company
+          </button>
+          <button class="save-btn">
+            💾 Save
           </button>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Message si aucun résultat -->
-  <div *ngIf="filteredInternships.length === 0 && !loading" 
-       class="text-center py-8">
-    <div class="text-gray-400 mb-4">
-      <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-      </svg>
-    </div>
-    <h3 class="text-lg font-medium text-gray-900 mb-2">Aucun stage trouvé</h3>
-    <p class="text-gray-500">Essayez de modifier vos filtres pour voir plus de résultats.</p>
   </div>
 </div>

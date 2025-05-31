@@ -1,9 +1,9 @@
 export interface InternshipSuggestion {
-  id: number;
+  id?: number;
   title: string;
   company: string;
   location: string;
   duration: string;
   description: string;
-  requirements: string;
+  startDate: string;
 }
