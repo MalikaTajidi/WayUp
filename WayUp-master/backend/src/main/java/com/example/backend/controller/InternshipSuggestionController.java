@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.entities.Internship;
 import com.example.backend.service.serviceImp.InternshipSuggestionServiceImp;
+import com.example.backend.service.servicesInterfaces.CompanySuggestionService;
 import com.example.backend.entities.User;
 import com.example.backend.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -22,18 +23,20 @@ public class InternshipSuggestionController {
 
     private static final Logger LOGGER = Logger.getLogger(InternshipSuggestionController.class.getName());
     
-    private final InternshipSuggestionServiceImp internshipSuggestionService;
+    private final InternshipSuggestionServiceImp geminiService;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
+  //  private final CompanySuggestionService geminiService;
 
     // Constructor to inject dependencies
     public InternshipSuggestionController(InternshipSuggestionServiceImp internshipSuggestionService, UserRepository userRepository) {
-        this.internshipSuggestionService = internshipSuggestionService;
+        this.geminiService = internshipSuggestionService;
         this.userRepository = userRepository;
         this.objectMapper = new ObjectMapper();
     }
 
     // Endpoint to get internships for the currently authenticated user
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/me")
     public ResponseEntity<?> getInternshipsForAuthenticatedUser() {
         try {
@@ -63,7 +66,7 @@ public class InternshipSuggestionController {
             LOGGER.info("Fetching internships for job title: " + jobTitle);
 
             // Call the service to get the internships based on the job title
-            String internshipsJsonResponse = internshipSuggestionService.fetchInternships(jobTitle);
+            String internshipsJsonResponse = geminiService.fetchInternships(jobTitle);
             LOGGER.info("Received JSON response: " + internshipsJsonResponse);
 
             // Parse the JSON response into a List of Internship objects
@@ -92,20 +95,16 @@ public class InternshipSuggestionController {
     }
     
     // Endpoint to manually check internships for a specific job title (for testing)
-    @GetMapping("/test/{jobTitle}")
-    public ResponseEntity<?> testInternshipsFetch(@PathVariable String jobTitle) {
+  @CrossOrigin(origins = "http://localhost:4200")
+  @GetMapping("/test-intership-api/{jobTitle}")
+    public ResponseEntity<?> testIntershipApi(@PathVariable String jobTitle) {
         try {
-            LOGGER.info("Test endpoint: Fetching internships for job title: " + jobTitle);
-            
-            String internshipsJsonResponse = internshipSuggestionService.fetchInternships(jobTitle);
-            LOGGER.info("Received JSON response: " + internshipsJsonResponse);
-            
-            // Return the raw JSON for debugging
-            return ResponseEntity.ok(internshipsJsonResponse);
+            String rawJson = geminiService.fetchInternships(jobTitle);
+            return ResponseEntity.ok(rawJson);
         } catch (Exception e) {
-            LOGGER.severe("Error in test endpoint: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error in test endpoint: " + e.getMessage());
+                .body("API test failed: " + e.getMessage());
         }
     }
 }
