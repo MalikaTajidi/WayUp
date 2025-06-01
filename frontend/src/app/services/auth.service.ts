@@ -19,7 +19,7 @@ export class AuthService {
   }
 
   registerUser(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, userData);
+    return this.http.post(`${this.apiUrl}/register`, userData,{ responseType: 'text' as 'json' });
   }
   getToken() {
     return localStorage.getItem('authToken');

@@ -18,5 +18,5 @@ export const routes: Routes = [
         { path: '', component: LandingComponent},
     { path: 'company-suggestion', component: CompanySuggestionComponent },
     { path: 'formation', component: FormationComponentComponent },
-    {path:'intership',component:InternshipListComponent}
+    {path:'internship',component:InternshipListComponent}
 ];
