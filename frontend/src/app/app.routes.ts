@@ -7,6 +7,7 @@ import { FormTestComponent } from './form-test/form-test.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { TestComponent } from './test/test.component';
 import { LandingComponent } from './landing/landing.component';
+import { InternshipListComponent } from './internship-list/internship-list.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent},
@@ -17,4 +18,5 @@ export const routes: Routes = [
         { path: '', component: LandingComponent},
     { path: 'company-suggestion', component: CompanySuggestionComponent },
     { path: 'formation', component: FormationComponentComponent },
+    {path:'intership',component:InternshipListComponent}
 ];
