@@ -1,0 +1,119 @@
+<!-- internship-list.component.html -->
+
+<div class="fixed top-0 left-0 h-screen w-64 p-6 bg-white/10 backdrop-blur-lg shadow-lg z-10">
+  <app-sidebar></app-sidebar>
+</div>
+<div class="internship-container">
+  <div class="main-content">
+    <div class="header-section">
+      <h2>Internship Suggestions for You</h2>
+      <button 
+        class="refresh-btn" 
+        (click)="refreshInternships()" 
+        [disabled]="isLoading"
+        title="Refresh suggestions">
+        🔄 Refresh
+      </button>
+    </div>
+
+    <!-- Search Filters -->
+    <div class="filters-section" *ngIf="internships.length > 0 && !isLoading">
+      <div class="filter-group">
+        <input 
+          type="text" 
+          [(ngModel)]="filterTitle" 
+          (input)="filterInternships()"
+          placeholder="Search by title..."
+          class="filter-input">
+        
+        <input 
+          type="text" 
+          [(ngModel)]="filterLocation" 
+          (input)="filterInternships()"
+          placeholder="Search by location..."
+          class="filter-input">
+        
+        <button 
+          class="clear-filters-btn" 
+          (click)="clearFilters()"
+          *ngIf="filterTitle || filterLocation">
+          Clear filters
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading Display -->
+    <div *ngIf="isLoading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading internships...</p>
+    </div>
+
+    <!-- Error Display -->
+    <div *ngIf="error && !isLoading" class="error">
+      <div class="error-icon">⚠️</div>
+      <div class="error-content">
+        <h3>Error</h3>
+        <p>{{ error }}</p>
+        <button class="retry-btn" (click)="refreshInternships()">
+          Retry
+        </button>
+      </div>
+    </div>
+
+    <!-- No Results After Filtering -->
+    <div *ngIf="!isLoading && filteredInternships.length === 0 && internships.length > 0 && !error" class="no-results">
+      <div class="no-results-icon">🔍</div>
+      <h3>No Results</h3>
+      <p>No internships match your search criteria.</p>
+      <button class="clear-filters-btn" (click)="clearFilters()">
+        View all internships
+      </button>
+    </div>
+
+    <!-- Internship List -->
+    <div *ngIf="!isLoading && filteredInternships.length > 0" class="internship-list">
+      <div class="results-count">
+        <p>{{ filteredInternships.length }} internship(s) found</p>
+      </div>
+      
+      <div *ngFor="let internship of filteredInternships; trackBy: trackByIndex" class="internship-card">
+        <div class="card-header">
+          <h3>{{ internship.title }}</h3>
+          <span class="company-badge">{{ internship.company }}</span>
+        </div>
+        
+        <div class="card-body">
+          <div class="internship-meta">
+            <div class="location-info">
+              <span class="location-icon">📍</span>
+              <span>{{ internship.location }}</span>
+            </div>
+            
+            <div class="duration-info">
+              <span class="duration-icon">⏱️</span>
+              <span>{{ internship.duration }}</span>
+            </div>
+            
+            <div class="start-date-info">
+              <span class="date-icon">📅</span>
+              <span>Start: {{ internship.startDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+          
+          <div class="description">
+            <p>{{ internship.description }}</p>
+          </div>
+        </div>
+        
+        <div class="card-footer">
+          <button class="contact-btn">
+            Contact Company
+          </button>
+          <button class="save-btn">
+            💾 Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
