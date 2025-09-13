@@ -23,7 +23,7 @@ public class CompanySuggestionServiceImp implements CompanySuggestionService {
     private static final Logger LOGGER = Logger.getLogger(CompanySuggestionServiceImp.class.getName());
     private static final MediaType JSON = MediaType.parse("application/json");
 
-    private final String apiKey = "AIzaSyBJxLlT3i-ZMe8BlhaDtVqnyQSX2zYz6ec";
+    private final String apiKey = "key";
 
     private final OkHttpClient client = new OkHttpClient.Builder()
         .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
