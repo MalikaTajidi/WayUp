@@ -24,7 +24,7 @@ public class InternshipSuggestionServiceImp implements InternshipSuggestionServi
     private static final Logger LOGGER = Logger.getLogger(InternshipSuggestionServiceImp.class.getName());
     private static final MediaType JSON = MediaType.parse("application/json");
 
-    private final String apiKey = "AIzaSyAYagjKdvJkclnOSUUCnZplzEk1C6u6R98"; // Remplacez par votre clé API Gemini
+    private final String apiKey = "key"; 
 
     private final OkHttpClient client = new OkHttpClient.Builder()
         .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
